@@ -16,6 +16,8 @@
     .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }.card { padding:21px; border:1px solid var(--line); border-radius:14px; background:var(--paper); box-shadow:0 6px 19px #28433a0a; }.card strong { display:block; margin:3px 0 6px; font-size:18px; }.muted { color:var(--muted); }.tag { display:inline-block; padding:2px 8px; border-radius:99px; background:#e4f3f1; color:#006b76; font-size:12px; font-weight:700; }.schedule { display:grid; gap:11px; }.day { display:grid; grid-template-columns:106px 1fr 158px; gap:20px; align-items:start; padding:20px 0; border-bottom:1px solid var(--line); }.day:first-child { border-top:1px solid var(--line); }.day time { color:var(--orange); font-weight:800; }.place { color:var(--sea); font-weight:800; }.flight-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }.flight { padding:20px; border-radius:14px; color:#eaf8f6; background:#12313a; }.flight .route { margin:7px 0; color:#fff; font:700 22px/1.2 Georgia,serif; }.flight small { color:#acc9c5; }.price { margin-top:10px; color:#ffd777; font-weight:800; }
     table { width:100%; border-collapse:collapse; background:var(--paper); border:1px solid var(--line); border-radius:14px; overflow:hidden; } th,td { padding:14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); } th { background:#eaf3ef; font-size:13px; } tr:last-child td { border:0; }.cta { display:inline-block; margin-top:10px; padding:7px 11px; border-radius:8px; color:#fff; background:var(--sea); text-decoration:none; font-size:13px; font-weight:700; }.budget { display:grid; grid-template-columns:1.3fr .7fr; gap:16px; }.total { color:#fff; background:var(--orange); }.total strong { color:#fff4d5; font:700 34px/1.1 Georgia,serif; }.checklist { columns:2; padding-left:20px; }.checklist li { margin:8px 0; } footer { margin-top:55px; padding:25px 0 44px; color:#68757a; font-size:13px; }
     @media (max-width:720px) { .hero { min-height:470px; }.grid,.flight-grid,.budget { grid-template-columns:1fr; }.day { grid-template-columns:1fr; gap:4px; }.day .place { margin-top:4px; }.checklist { columns:1; } th,td { padding:10px; font-size:13px; } .map,#route-map { min-height:440px; height:440px; }.map-card { left:14px; right:14px; max-width:none; } }
+    .candidate-intro { margin:0 0 16px; color:var(--muted); }.candidate-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }.candidate-card { padding:20px; border:1px solid var(--line); border-radius:14px; background:var(--paper); box-shadow:0 6px 19px #28433a0a; }.candidate-card h3 { margin-bottom:5px; }.candidate-card .price { margin:8px 0; color:var(--orange); font-size:18px; }.candidate-card ul { margin:11px 0 0; padding-left:18px; color:#44545a; font-size:14px; line-height:1.65; }.candidate-card .status { color:#80662b; font-size:12px; }.stay-map { height:410px; margin-top:18px; overflow:hidden; border:1px solid var(--line); border-radius:14px; background:#dbe8e6; }.stay-map-caption { margin:10px 0 0; color:var(--muted); font-size:13px; }.candidate-pin { width:28px; height:28px; border-radius:50%; display:grid; place-items:center; color:#fff; background:#007782; border:2px solid #fff; box-shadow:0 2px 7px #17393c66; font-weight:800; font-size:12px; }.candidate-pin:before { display:none; }
+    @media (max-width:720px) { .candidate-grid { grid-template-columns:1fr; }.stay-map { height:360px; } }
   </style>
 </head>
 <body>
@@ -59,6 +61,22 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     (() => {
+      const stayCandidates = `
+        <section class="section" id="saw-stay-candidates">
+          <p class="kicker">04A · SAW stay shortlist</p>
+          <h2>10/5 深夜抵达后的亚洲区住宿候选</h2>
+          <p class="candidate-intro">查价条件：2026/10/05–10/06、4 位成人、1 间住宿、人民币；价格快照查询于 <b>2026/08/17</b>，均为 <b>Booking 实时可订快照</b>，已含其页面显示的税费。深夜从 SAW 出关后再打车，以下“到 SAW”是道路距离与夜间经验预估，非实时叫车报价。<b>严格的「2 间卧室 + 4 张独立床」在 ¥1,000 内没有查到完全匹配项。</b></p>
+          <div class="candidate-grid">
+            <article class="candidate-card"><span class="tag">首选 · 最接近硬条件</span><h3>Nox Hotel Kadıköy</h3><p class="muted">Rasimpaşa / Kadıköy；安静街区，步行至地铁、餐馆和码头</p><div class="price">¥864 / 4 人 / 晚</div><ul><li><b>85㎡家庭套房：</b>2 间卧室、2 张大号床 + 客厅 1 张沙发床，最多 5 人；不是 4 张独立床。</li><li>Booking 8.8（13 条），位置 9.6；有餐厅、空调、免费 Wi‑Fi。环境偏新式精品酒店，有公共餐饮空间。</li><li><b>到 SAW：</b>页面标示机场距住宿约 29 km；夜间打车约 45–60 分，按路况预留 65 分。</li><li><b>风险：</b>该价格的免费取消到 10/5 18:00；需预订前书面确认 00:30 后仍可入住。</li></ul><a class="cta" href="https://www.booking.com/hotel/tr/luxury-boutique-in-the-heart-of-kadikoy-with-premium-restaurant-amp-bakery.zh-cn.html?checkin=2026-10-05&amp;checkout=2026-10-06&amp;group_adults=4&amp;no_rooms=1" target="_blank" rel="noopener">查看 Booking 房型</a></article>
+            <article class="candidate-card"><span class="tag">深夜入住备选</span><h3>Pi Art Butik Otel</h3><p class="muted">Rasimpaşa / Yeldeğirmeni；码头、咖啡馆、地铁都在步行范围</p><div class="price">¥781 / 4 人 / 晚</div><ul><li><b>家庭间：</b>4 人、3 张床（2 单人 + 1 大床），<b>不满足两居</b>，只作为省预算的临时备选。</li><li>Booking 8.3（53 条）、位置 9.6；官方资料写明 24 小时前台、空调和免费 Wi‑Fi，适合航班深夜抵达。</li><li><b>到 SAW：</b>约 31 km；夜间打车约 50–65 分，白天/晚高峰可能更久。</li><li>环境是小型精品酒店，不是整套民宿；优点是抵达后的接待确定性较高。</li></ul><a class="cta" href="https://www.booking.com/hotel/tr/iskele-boutique.zh-cn.html?checkin=2026-10-05&amp;checkout=2026-10-06&amp;group_adults=4&amp;no_rooms=1" target="_blank" rel="noopener">查看 Booking 房型</a></article>
+            <article class="candidate-card"><span class="tag">价格优先备选</span><h3>Armoni City Otel Kadıköy</h3><p class="muted">Osmanağa / Kadıköy 市场腹地；周边商店、餐厅密集</p><div class="price">¥508 / 4 人 / 晚</div><ul><li><b>四人间：</b>2 单人 + 1 双人床，共 3 张床；<b>不满足两居</b>，仅适合把“房间数”放宽时。</li><li>Booking 8.0（197 条）、位置 9.3；Google 地图资料为简约住宿，距离 Kadıköy 码头/地铁约步行 7 分钟。</li><li><b>到 SAW：</b>约 31–34 km；夜间打车约 50–65 分，建议预留 70 分。</li><li><b>风险：</b>应在下单前确认前台是否整夜有人；不要只凭“可订”假设可凌晨办理入住。</li></ul><a class="cta" href="https://www.booking.com/hotel/tr/armonim-otelcilik.zh-cn.html?checkin=2026-10-05&amp;checkout=2026-10-06&amp;group_adults=4&amp;no_rooms=1" target="_blank" rel="noopener">查看 Booking 房型</a></article>
+          </div>
+          <p class="stay-map-caption"><b>Airbnb 对比：</b>已用相同日期与 4 人条件检索 Kadıköy；其当前结果外溢到 Arnavutköy、Büyükçekmece 等远区，未找到可同时核实「Kadıköy 位置、深夜入住、两居四人、¥1,000 内」的可信条目，因此未混入候选。可直接用下方链接继续筛选整套房与自助入住。</p>
+          <p><a class="cta" href="https://www.airbnb.com/s/Kad%C4%B1k%C3%B6y--Istanbul--T%C3%BCrkiye/homes?checkin=2026-10-05&amp;checkout=2026-10-06&amp;adults=4" target="_blank" rel="noopener">在 Airbnb 继续筛选</a> <a class="cta" href="https://www.google.com/maps/dir/?api=1&amp;origin=Sabiha+Gokcen+International+Airport&amp;destination=Kadikoy+Rasimpa%C5%9Fa" target="_blank" rel="noopener">打开 SAW → Kadıköy 打车路线</a></p>
+          <div id="saw-stay-map" class="stay-map" role="application" aria-label="Kadıköy 10 月 5 日住宿候选位置图"></div>
+          <p class="stay-map-caption">图钉按公开地址／地图检索位置落点；点击图钉可跳转到 Google Maps 复核。三处均在 Kadıköy 核心区，Pi Art 与 Nox 更靠近 Rasimpaşa / Yeldeğirmeni，Armoni 更靠近 Osmanağa 市场区。</p>
+        </section>`;
+      document.querySelector('#budget').insertAdjacentHTML('beforebegin', stayCandidates);
       const places = {
         CAN: { name: '广州白云 CAN', lat: 23.3924, lng: 113.2988, offset: [0, 12] },
         BKK: { name: '曼谷 BKK', lat: 13.6900, lng: 100.7501, offset: [0, -12] },
@@ -101,6 +119,22 @@
       const bounds = L.latLngBounds(Object.values(places).map(place => [place.lat, place.lng]));
       map.fitBounds(bounds.pad(.12));
       map.on('focus', () => map.scrollWheelZoom.enable());
+
+      const stayMap = L.map('saw-stay-map', { scrollWheelZoom: false, zoomControl: true, attributionControl: true }).setView([40.9940, 29.0294], 15.7);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(stayMap);
+      const stayPins = [
+        { n: '1', name: 'Nox Hotel Kadıköy', area: 'Rasimpaşa / Kadıköy', pos: [40.9938, 29.0274], href: 'https://www.google.com/maps/search/?api=1&query=Nox+Hotel+Kadikoy' },
+        { n: '2', name: 'Pi Art Butik Otel', area: 'Rasimpaşa / Yeldeğirmeni', pos: [40.99548, 29.03179], href: 'https://www.google.com/maps/search/?api=1&query=Pi+Art+Butik+Otel+Kadikoy' },
+        { n: '3', name: 'Armoni City Otel Kadıköy', area: 'Osmanağa / Kadıköy', pos: [40.9927244, 29.0290152], href: 'https://www.google.com/maps/search/?api=1&query=Armoni+City+Kadikoy' }
+      ];
+      stayPins.forEach(pin => L.marker(pin.pos, { icon: L.divIcon({ className: 'candidate-pin', html: pin.n, iconSize: [28, 28], iconAnchor: [14, 14] }) })
+        .addTo(stayMap)
+        .bindPopup(`<b>${pin.n}. ${pin.name}</b><br>${pin.area}<br><a href="${pin.href}" target="_blank" rel="noopener">在 Google Maps 打开 →</a>`));
+      stayMap.fitBounds(L.latLngBounds(stayPins.map(pin => pin.pos)).pad(.35));
+      stayMap.on('focus', () => stayMap.scrollWheelZoom.enable());
     })();
   </script>
 </body>
